@@ -43,6 +43,11 @@ public:
 	}
 };
 
+ostream& operator<<(ostream& os, const Human& obj)
+{
+	return os << obj.get_last_name() << " " << obj.get_first_name() << " " << obj.get_age() << " y.o.";
+}
+
 #define STUDENT_TAKE_PARAMETERS const string& specialty, const string& group, double rating, double attendence
 #define STUDENT_GIVE_PARAMETERS specialty,group,rating,attendence
 
@@ -107,8 +112,13 @@ public:
 		Human::print();
 		cout << specialty << " " << group << " " << rating << " " << attendence << endl;
 	}
-
 };
+
+ostream& operator<<(ostream& os, const Student& obj)
+{
+	os << (Human&)obj << " ";
+	return os << obj.get_specialty() << " " << obj.get_group() << " " << obj.get_rating() << " " << obj.get_attendence();
+}
 
 class Teacher :public Human
 {
@@ -157,6 +167,12 @@ public:
 		cout << specialty << " " << experience << endl;
 	}
 };
+
+ostream& operator<<(ostream& os, const Teacher& obj)
+{
+	os << (Human&)obj;
+	return os << obj.get_specialty() << " " << obj.get_experiance() << " year";
+}
 
 #define GRADUATE_TAKE_PARAMETERS const string& specialty, const string& group, double graduate_work
 #define GRADUATE_GIVE_PARAMETERS specialty,group,graduate_work
@@ -212,6 +228,11 @@ public:
 		cout << specialty << " " << group << " " << graduate_work << " points\n";
 	}
 };
+ostream& operator<<(ostream& os, const Graduate& obj)
+{
+	os << (Human&)obj;
+	return os << obj.get_specialty() << " " << obj.get_group() << " " << obj.get_graduate_work() << " point";
+}
 
 //#define INHERITANCE 
 
@@ -239,17 +260,24 @@ void main()
 		new Student("Pinkman", "Jessie", 25, "Chemistry", "ww_220", 90, 95),
 		new Teacher("White", "Walter", 50, "Chemistry", 20),
 		new Student("Vercetti","Tomas",30,"Criminalistica","Vice",98,99),
+		new Graduate("Makhmudov", "Punkhan", 35, "Software developer", "PV_224", 100),
 		new Teacher("Diaz","Ricardo",50,"Weapons distribution",15),
 		new Teacher("Einstein","Albert",143,"Astronomy",120)
 	};
 	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
 	{
-		group[i]->print();
+		//group[i]->print();
+		//cout << *group[i] << endl;
+		cout << typeid(*group[i]).name() << endl;
+		if (typeid(*group[i]) == typeid(Student))cout << *dynamic_cast<Student*>(group[i]) << endl;
+		if (typeid(*group[i]) == typeid(Graduate))cout << *dynamic_cast<Graduate*>(group[i]) << endl;
+		if (typeid(*group[i]) == typeid(Teacher))cout << *dynamic_cast<Teacher*>(group[i]) << endl;
+		//dynamic_cast<Дочерний*>(Базовый*);
 		cout << delimiter << endl;
 	}
 	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
 	{
-		delete group[i];
+		delete group[i];	
 	}
 
 }
