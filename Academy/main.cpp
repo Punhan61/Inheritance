@@ -161,46 +161,27 @@ public:
 #define GRADUATE_TAKE_PARAMETERS const string& specialty, const string& group, double graduate_work
 #define GRADUATE_GIVE_PARAMETERS specialty,group,graduate_work
 
-class Graduate :public Human
+class Undergrad :public Student
 {
-	string specialty;
-	string group;
-	double graduate_work;
+	string topic;
 public:
-	const string& get_specialty()const
+	const string& get_topic()const
 	{
-		return specialty;
+		return topic;
 	}
-	const string& get_group()const
+	void set_topic(const string& topic)
 	{
-		return group;
+		this->topic = topic;
 	}
-	double get_graduate_work()const
-	{
-		return graduate_work;
-	}
-	void set_specialty(const string& specialty)
-	{
-		this->specialty = specialty;
-	}
-	void set_group(const string& group)
-	{
-		this->group = group;
-	}
-	double set_graduate_work(double graduate_work)
-	{
-		this->graduate_work = graduate_work;
-	}
-
+	
 	// Constructors
-	Graduate(HUMAN_TAKE_PARAMETERS, GRADUATE_TAKE_PARAMETERS) :Human(HUMAN_GIVE_PARAMETERS)
+	Undergrad(HUMAN_TAKE_PARAMETERS, STUDENT_TAKE_PARAMETERS,const string& topic) :
+		Student(HUMAN_GIVE_PARAMETERS,STUDENT_GIVE_PARAMETERS)
 	{
-		this->specialty = specialty;
-		this->group = group;
-		this->graduate_work = graduate_work;
-		cout << "DConstructor:\t" << this << endl;
+		set_topic(topic);
+		cout << "GConstructor:\t" << this << endl;
 	}
-	~Graduate()
+	~Undergrad()
 	{
 		cout << "DDestructor:\t" << this << endl;
 	}
@@ -208,8 +189,8 @@ public:
 	// Methods
 	void print()const
 	{
-		Human::print();
-		cout << specialty << " " << group << " " << graduate_work << " points\n";
+		Student::print();
+		cout << "Тема дипломной работы: " << topic << endl;
 	}
 };
 
@@ -230,7 +211,7 @@ void main()
 	Teacher professor("White", "Walter", 50, "Chemistry", 20);
 	professor.print();
 	cout << delimiter << endl;
-	Graduate grad("Makhmudov", "Punkhan", 35, "Software developer", "PV_224", 100);
+	Undergrad("Makhmudov", "Punkhan", 35, "Software developer", "PV_224", 95, 80, "OOP Polymorphism");
 	grad.print();
 #endif // INHERITANCE
 
@@ -238,6 +219,7 @@ void main()
 	{
 		new Student("Pinkman", "Jessie", 25, "Chemistry", "ww_220", 90, 95),
 		new Teacher("White", "Walter", 50, "Chemistry", 20),
+		new Undergrad("Makhmudov", "Punkhan", 35,"Software developer","PV_224",95,80,"OOP Polymorphism"),
 		new Student("Vercetti","Tomas",30,"Criminalistica","Vice",98,99),
 		new Teacher("Diaz","Ricardo",50,"Weapons distribution",15),
 		new Teacher("Einstein","Albert",143,"Astronomy",120)
