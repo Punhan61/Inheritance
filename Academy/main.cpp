@@ -1,7 +1,7 @@
 #include<iostream>
 using namespace std;
 
-#define delimitr "\n--------------------------------------------\n"
+#define delimiter "\n--------------------------------------------\n"
 
 #define HUMAN_TAKE_PARAMETERS const string& last_name, const string& first_name,unsigned int age
 #define HUMAN_GIVE_PARAMETERS last_name,first_name,age
@@ -31,13 +31,13 @@ public:
 	{
 		cout << "HConstructor:\t" << this << endl;
 	}
-	~Human()
+	virtual ~Human()
 	{
 		cout << "HDestructor:\t" << this << endl;
 	}
 
 	// Methods
-	void print()const
+	virtual void print()const
 	{
 		cout << last_name << " " << first_name << " " << age << " лет\n";
 	}
@@ -193,7 +193,7 @@ public:
 	}
 
 	// Constructors
-	Graduate(HUMAN_TAKE_PARAMETERS, GRADUATE_TAKE_PARAMETERS):Human(HUMAN_GIVE_PARAMETERS)
+	Graduate(HUMAN_TAKE_PARAMETERS, GRADUATE_TAKE_PARAMETERS) :Human(HUMAN_GIVE_PARAMETERS)
 	{
 		this->specialty = specialty;
 		this->group = group;
@@ -213,18 +213,43 @@ public:
 	}
 };
 
+//#define INHERITANCE 
+
 void main()
 {
 	setlocale(LC_ALL, "");
+#ifdef INHERITANCE
 	Human human("Montana", "Antonio", 25);
 	human.print();
-	cout << delimitr << endl;
+	cout << delimiter << endl;
+
 	Student stud("Pinkman", "Jessie", 25, "Chemistry", "ww_220", 90, 95);
 	stud.print();
-	cout << delimitr << endl;
+	cout << delimiter << endl;
+
 	Teacher professor("White", "Walter", 50, "Chemistry", 20);
 	professor.print();
-	cout << delimitr << endl;
+	cout << delimiter << endl;
 	Graduate grad("Makhmudov", "Punkhan", 35, "Software developer", "PV_224", 100);
 	grad.print();
+#endif // INHERITANCE
+
+	Human* group[] =
+	{
+		new Student("Pinkman", "Jessie", 25, "Chemistry", "ww_220", 90, 95),
+		new Teacher("White", "Walter", 50, "Chemistry", 20),
+		new Student("Vercetti","Tomas",30,"Criminalistica","Vice",98,99),
+		new Teacher("Diaz","Ricardo",50,"Weapons distribution",15),
+		new Teacher("Einstein","Albert",143,"Astronomy",120)
+	};
+	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
+	{
+		group[i]->print();
+		cout << delimiter << endl;
+	}
+	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
+	{
+		delete group[i];
+	}
+
 }
