@@ -129,7 +129,7 @@ public:
 	{
 		this->specialty = specialty;
 	}
-	void set_experience(unsigned int axperience)
+	void set_experience(unsigned int experience)
 	{
 		this->experience = experience;
 	}
