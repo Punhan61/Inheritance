@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Academy", "Academy\Academy.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DynamicCast", "DynamicCast\DynamicCast.vcxproj", "{B6D6DF70-34E8-469F-9B3D-BBAFC5E4F33A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Files", "Files\Files.vcxproj", "{B9267311-226C-48A9-9E6B-B134C130C697}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +43,14 @@ Global
 		{B6D6DF70-34E8-469F-9B3D-BBAFC5E4F33A}.Release|x64.Build.0 = Release|x64
 		{B6D6DF70-34E8-469F-9B3D-BBAFC5E4F33A}.Release|x86.ActiveCfg = Release|Win32
 		{B6D6DF70-34E8-469F-9B3D-BBAFC5E4F33A}.Release|x86.Build.0 = Release|Win32
+		{B9267311-226C-48A9-9E6B-B134C130C697}.Debug|x64.ActiveCfg = Debug|x64
+		{B9267311-226C-48A9-9E6B-B134C130C697}.Debug|x64.Build.0 = Debug|x64
+		{B9267311-226C-48A9-9E6B-B134C130C697}.Debug|x86.ActiveCfg = Debug|Win32
+		{B9267311-226C-48A9-9E6B-B134C130C697}.Debug|x86.Build.0 = Debug|Win32
+		{B9267311-226C-48A9-9E6B-B134C130C697}.Release|x64.ActiveCfg = Release|x64
+		{B9267311-226C-48A9-9E6B-B134C130C697}.Release|x64.Build.0 = Release|x64
+		{B9267311-226C-48A9-9E6B-B134C130C697}.Release|x86.ActiveCfg = Release|Win32
+		{B9267311-226C-48A9-9E6B-B134C130C697}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

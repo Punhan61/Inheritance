@@ -37,12 +37,16 @@ public:
 	}
 
 	// Methods
-	virtual void print()const
+	virtual ostream& print(ostream& os)const
 	{
-		cout << last_name << " " << first_name << " " << age << " лет\n";
+		return os << last_name << " " << first_name << " " << age << " лет\n";
 	}
 };
 
+ostream& operator<<(ostream& os, const Human& obj)
+{
+	return obj.print(os);
+}
 #define STUDENT_TAKE_PARAMETERS const string& specialty, const string& group, double rating, double attendence
 #define STUDENT_GIVE_PARAMETERS specialty,group,rating,attendence
 
@@ -102,12 +106,10 @@ public:
 	}
 
 	// Methods
-	void print()const
+	ostream& print(ostream& os)const override
 	{
-		Human::print();
-		cout << specialty << " " << group << " " << rating << " " << attendence << endl;
+		return Human::print(os) << specialty << " " << group << " " << rating << " " << attendence << endl;
 	}
-
 };
 
 class Teacher :public Human
@@ -151,10 +153,10 @@ public:
 
 	// Methods
 
-	void print()const
+	ostream& print(ostream& os)const override
 	{
-		Human::print();
-		cout << specialty << " " << experience << endl;
+		Human::print(os);
+		return os << specialty << " " << experience << endl;
 	}
 };
 
@@ -187,10 +189,10 @@ public:
 	}
 
 	// Methods
-	void print()const
+	ostream& print(ostream& os)const override
 	{
-		Student::print();
-		cout << "Тема дипломной работы: " << topic << endl;
+		Student::print(os);
+		return os << "Тема дипломной работы: " << topic << endl;
 	}
 };
 
@@ -226,7 +228,8 @@ void main()
 	};
 	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
 	{
-		group[i]->print();
+		//group[i]->print();
+		cout << *group[i] << endl;
 		cout << delimiter << endl;
 	}
 	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
