@@ -43,6 +43,11 @@ public:
 	}
 };
 
+ostream& operator<<(ostream& os, const Human& obj)
+{
+	return os << obj.get_last_name() << " " << obj.get_first_name() << " " << obj.get_age() << " y.o";
+}
+
 #define STUDENT_TAKE_PARAMETERS const string& specialty, const string& group, double rating, double attendence
 #define STUDENT_GIVE_PARAMETERS specialty,group,rating,attendence
 
@@ -110,6 +115,11 @@ public:
 
 };
 
+ostream& operator<<(ostream& os, const Student& obj)
+{
+	return os << obj.get_specialty() << " " << obj.get_group() << " " << obj.get_rating() << " " << obj.get_attendence();
+}
+
 class Teacher :public Human
 {
 	string specialty;
@@ -141,7 +151,7 @@ public:
 	) :Human(last_name, first_name, age)
 	{
 		set_specialty(specialty);
-		set_experience(experience);
+		this->experience = experience;
 		cout << "TConstructor:\t" << this << endl;
 	}
 	~Teacher()
@@ -158,8 +168,10 @@ public:
 	}
 };
 
-#define GRADUATE_TAKE_PARAMETERS const string& specialty, const string& group, double graduate_work
-#define GRADUATE_GIVE_PARAMETERS specialty,group,graduate_work
+ostream& operator<<(ostream& os, const Teacher& obj)
+{
+	return os << obj.get_specialty() << " " << obj.get_experiance();
+}
 
 class Undergrad :public Student
 {
@@ -194,6 +206,11 @@ public:
 	}
 };
 
+ostream& operator<<(ostream& os, const Undergrad& obj)
+{
+	return os << obj.get_topic();
+}
+
 //#define INHERITANCE 
 
 void main()
@@ -215,6 +232,7 @@ void main()
 	grad.print();
 #endif // INHERITANCE
 
+	// Generalisation(UpCast - преобразование снизу вверх)
 	Human* group[] =
 	{
 		new Student("Pinkman", "Jessie", 25, "Chemistry", "ww_220", 90, 95),
@@ -224,14 +242,21 @@ void main()
 		new Teacher("Diaz","Ricardo",50,"Weapons distribution",15),
 		new Teacher("Einstein","Albert",143,"Astronomy",120)
 	};
+
+	// Specialisation - Уточнение (DowsCast - преобразование сверху вниз)
 	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
 	{
-		group[i]->print();
+		//group[i]->print();
+		//cout << *group[i] << endl;
+		cout << typeid(*group[i]).name() << endl;
+		if (typeid(*group[i]) == typeid(Student))cout << *dynamic_cast<Student*>(group[i]);
+		if (typeid(*group[i]) == typeid(Undergrad))cout << *dynamic_cast<Undergrad*>(group[i]);
+		if(typeid(*group[i])==typeid(Teacher))cout<<*dynamic_cast<Teacher*>(group[i]);
 		cout << delimiter << endl;
 	}
+
 	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
 	{
 		delete group[i];
 	}
-
 }
