@@ -1,16 +1,13 @@
 #include<iostream>
 using namespace std;
 
-#define delimiter "\n--------------------------------------------\n"
+#define delimiter  "\n-----------------------------------------------------\n"
 
-#define HUMAN_TAKE_PARAMETERS const string& last_name, const string& first_name,unsigned int age
-#define HUMAN_GIVE_PARAMETERS last_name,first_name,age
-
-class Human
+class Family
 {
 	string last_name;
 	string first_name;
-	unsigned int age;
+	string age;
 public:
 	const string& get_last_name()const
 	{
@@ -20,243 +17,94 @@ public:
 	{
 		return first_name;
 	}
-	unsigned int get_age()const
+	const string& get_age()const
 	{
 		return age;
 	}
+	void get_last_name(string& last_name)
+	{
+		this->first_name = last_name;
+	}
+	// Constructor
+	Family(const string& last_name,const string& first_name, const string& age)
+	{
+		this->last_name = last_name;
+		this->first_name = first_name;
+		this->age = age;
+	}
+	~Family()
+	{
 
-	// Constructors
-	Human(HUMAN_TAKE_PARAMETERS) :
-		last_name(last_name), first_name(first_name), age(age)
-	{
-		cout << "HConstructor:\t" << this << endl;
 	}
-	virtual ~Human()
-	{
-		cout << "HDestructor:\t" << this << endl;
-	}
-
-	// Methods
-	virtual void print()const
-	{
-		cout << last_name << " " << first_name << " " << age << " лет\n";
-	}
-};
-
-ostream& operator<<(ostream& os, const Human& obj)
-{
-	return os << obj.get_last_name() << " " << obj.get_first_name() << " " << obj.get_age() << " y.o";
-}
-
-#define STUDENT_TAKE_PARAMETERS const string& specialty, const string& group, double rating, double attendence
-#define STUDENT_GIVE_PARAMETERS specialty,group,rating,attendence
-
-class Student :public Human
-{
-	string specialty;
-	string group;
-	double rating;
-	double attendence;
-public:
-	const string& get_specialty()const
-	{
-		return specialty;
-	}
-	const string& get_group()const
-	{
-		return group;
-	}
-	double get_rating()const
-	{
-		return rating;
-	}
-	double get_attendence()const
-	{
-		return attendence;
-	}
-	void set_specialty(const string& specialty)
-	{
-		this->specialty = specialty;
-	}
-	void set_group(const string& group)
-	{
-		this->group = group;
-	}
-	void set_rating(double rating)
-	{
-		this->rating = rating;
-	}
-	void set_attendence(double attendence)
-	{
-		this->attendence = attendence;
-	}
-
-	// Constructors
-
-	Student(HUMAN_TAKE_PARAMETERS, STUDENT_TAKE_PARAMETERS) :Human(last_name, first_name, age)
-	{
-		this->specialty = specialty;
-		this->group = group;
-		this->rating = rating;
-		this->attendence = attendence;
-		cout << "SConstructor:\t" << this << endl;
-	}
-	~Student()
-	{
-		cout << "SDestructor:\t" << this << endl;
-	}
-
 	// Methods
 	void print()const
 	{
-		Human::print();
-		cout << specialty << " " << group << " " << rating << " " << attendence << endl;
+		cout << last_name << " " << first_name << " " << age<<" y.o" << endl;
 	}
-
 };
 
-ostream& operator<<(ostream& os, const Student& obj)
+class Family_mambers:Family
 {
-	return os << obj.get_specialty() << " " << obj.get_group() << " " << obj.get_rating() << " " << obj.get_attendence();
-}
-
-class Teacher :public Human
-{
-	string specialty;
-	unsigned int experience;
+	string family_mambers;
 public:
-	const string& get_specialty()const
+	const string& get_family_mambers()const
 	{
-		return specialty;
+		return family_mambers;
 	}
-	unsigned int get_experiance()const
+	
+	void set_family_mambers(const string& family_mambers)
 	{
-		return experience;
+		this->family_mambers = family_mambers;
 	}
-	void set_specialty(const string& specialty)
+	
+	// Constructor
+	Family_mambers(const string& last_name, const string& first_name, const string& age,
+		const string& family_mambers):Family(last_name,first_name,age)
 	{
-		this->specialty = specialty;
+		set_family_mambers(family_mambers);
 	}
-	void set_experience(unsigned int axperience)
+	~Family_mambers()
 	{
-		this->experience = experience;
-	}
 
-	//Constructors
-
-	Teacher
-	(
-		const string& last_name, const string& first_name, unsigned int age,
-		const string& specialty, unsigned int experience
-	) :Human(last_name, first_name, age)
-	{
-		set_specialty(specialty);
-		this->experience = experience;
-		cout << "TConstructor:\t" << this << endl;
 	}
-	~Teacher()
-	{
-		cout << "TDestructor:\t" << this << endl;
-	}
-
-	// Methods
-
+	//Methods
 	void print()const
 	{
-		Human::print();
-		cout << specialty << " " << experience << endl;
+		Family::print();
+		cout << family_mambers <<  endl;
 	}
 };
 
-ostream& operator<<(ostream& os, const Teacher& obj)
-{
-	return os << obj.get_specialty() << " " << obj.get_experiance();
-}
-
-class Undergrad :public Student
-{
-	string topic;
-public:
-	const string& get_topic()const
-	{
-		return topic;
-	}
-	void set_topic(const string& topic)
-	{
-		this->topic = topic;
-	}
-
-	// Constructors
-	Undergrad(HUMAN_TAKE_PARAMETERS, STUDENT_TAKE_PARAMETERS, const string& topic) :
-		Student(HUMAN_GIVE_PARAMETERS, STUDENT_GIVE_PARAMETERS)
-	{
-		set_topic(topic);
-		cout << "GConstructor:\t" << this << endl;
-	}
-	~Undergrad()
-	{
-		cout << "DDestructor:\t" << this << endl;
-	}
-
-	// Methods
-	void print()const
-	{
-		Student::print();
-		cout << "Тема дипломной работы: " << topic << endl;
-	}
-};
-
-ostream& operator<<(ostream& os, const Undergrad& obj)
-{
-	return os << obj.get_topic();
-}
-
-//#define INHERITANCE 
+//#define FAMILY
 
 void main()
 {
 	setlocale(LC_ALL, "");
-#ifdef INHERITANCE
-	Human human("Montana", "Antonio", 25);
-	human.print();
+#ifdef FAMILY
+	Family data("Last name", "First name", "Age");
+	data.print();
 	cout << delimiter << endl;
 
-	Student stud("Pinkman", "Jessie", 25, "Chemistry", "ww_220", 90, 95);
-	stud.print();
+	Family_mambers father("Makhmudov", "Punakhan", "35", "Father");
+	father.print();
 	cout << delimiter << endl;
 
-	Teacher professor("White", "Walter", 50, "Chemistry", 20);
-	professor.print();
+	Family_mambers mather("Akhmedova", "Ulker", "32", "Mather");
+	mather.print();
 	cout << delimiter << endl;
-	Undergrad("Makhmudov", "Punkhan", 35, "Software developer", "PV_224", 95, 80, "OOP Polymorphism");
-	grad.print();
-#endif // INHERITANCE
 
-	// Generalisation(UpCast - преобразование снизу вверх)
-	Human* group[] =
+	Family_mambers child_1("Makhmudov", "Timur", "10", "son");
+	child_1.print();
+	cout << delimiter << endl;
+
+	Family_mambers child_2("Makhmudov", "Deniz", "3", "son");
+	child_2.print();
+#endif // FAMILY
+
+	Family* group[] =
 	{
-		new Student("Pinkman", "Jessie", 25, "Chemistry", "ww_220", 90, 95),
-		new Teacher("White", "Walter", 50, "Chemistry", 20),
-		new Undergrad("Makhmudov", "Punkhan", 35,"Software developer","PV_224",95,80,"OOP Polymorphism"),
-		new Student("Vercetti","Tomas",30,"Criminalistica","Vice",98,99),
-		new Teacher("Diaz","Ricardo",50,"Weapons distribution",15),
-		new Teacher("Einstein","Albert",143,"Astronomy",120)
+		new Family("Makhmudov", "Punakhan", "35"),
+		new Family_mambers("Makhmudov", "Punakhan", "35", "Father")
 	};
 
-	// Specialisation - Уточнение (DowsCast - преобразование сверху вниз)
-	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
-	{
-		//group[i]->print();
-		//cout << *group[i] << endl;
-		cout << typeid(*group[i]).name() << endl;
-		if (typeid(*group[i]) == typeid(Student))cout << *dynamic_cast<Student*>(group[i]);
-		if (typeid(*group[i]) == typeid(Undergrad))cout << *dynamic_cast<Undergrad*>(group[i]);
-		if(typeid(*group[i])==typeid(Teacher))cout<<*dynamic_cast<Teacher*>(group[i]);
-		cout << delimiter << endl;
-	}
-
-	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
-	{
-		delete group[i];
-	}
 }
