@@ -10,6 +10,8 @@ using namespace std;
 
 class Human
 {
+	static const int FULL_NAME_LENGTH = 20;
+	static const int AGE_LENGTH = 5;
 	std::string last_name;
 	std::string first_name;
 	unsigned int age;
@@ -46,10 +48,10 @@ public:
 	virtual std::ofstream& print(std::ofstream& ofs)const
 	{
 		//ofs << last_name << " " << first_name << " " << age;
-		ofs.width(25);
+		ofs.width(FULL_NAME_LENGTH);
 		ofs << std::left;
 		ofs << last_name + " " + first_name; 
-		ofs.width(5);
+		ofs.width(AGE_LENGTH);
 		ofs << std::right;
 		ofs << age;
 		return ofs;
@@ -69,12 +71,22 @@ std::ofstream& operator<<(std::ofstream& ofs, const Human& obj)
 {
 	return obj.print(ofs);
 }
+std::ifstream& operator>>(std::ifstream& ifs, Human& obj)
+{
+	
+	return obj.scan(ifs);
+}
+
 
 #define STUDENT_TAKE_PARAMETERS const string& specialty, const string& group, double rating, double attendence
 #define STUDENT_GIVE_PARAMETERS specialty,group,rating,attendence
 
 class Student :public Human
 {
+	static const int SPECIALTY_LENGTH = 25;
+	static const int GROUP_LENGTH = 10;
+	static const int RATING_LENGTH = 8;
+	static const int ATTENDENCE_LENGTH = 8;
 	string specialty;
 	string group;
 	double rating;
@@ -136,24 +148,31 @@ public:
 	std::ofstream& print(std::ofstream& ofs)const override
 	{
 		Human::print(ofs) << " ";
-		ofs.width(25);
+		ofs.width(SPECIALTY_LENGTH);
 		ofs << std::left;
 		ofs << specialty;
-		ofs.width(10);
+		ofs.width(GROUP_LENGTH);
 		ofs << group;
-		ofs.width(8);
+		ofs.width(RATING_LENGTH);
 		ofs << std::right;
 		ofs << rating;
-		ofs.width(8);
+		ofs.width(ATTENDENCE_LENGTH);
 		ofs << attendence;
 		return ofs;
 	}
 	std::ifstream& scan(std::ifstream& ifs)override
 	{
+		Human::scan(ifs);
 		const int SIZE = 25;
 		char buffer[SIZE]{};
-		ifs.read(buffer, SIZE);
+		ifs.read(buffer, SIZE-1);
+		for (int i = SIZE - 2; buffer[i] == ' '; i--)buffer[i] = 0;
+		while (buffer[0] == ' ')
+		{
+			for (int i = 0; buffer[i]; i++)buffer[i] = buffer[i + 1];
+		}
 		specialty = buffer;
+		while (specialty[0] == ' ')specialty.erase(0, 1);
 		ifs >> group;
 		ifs >> rating;
 		ifs >> attendence;
@@ -163,6 +182,8 @@ public:
 
 class Teacher :public Human
 {
+	static const int SPECIALTY_LENGTH = 25;
+	static const int EXPERIENCE_LENGTH = 5;
 	string specialty;
 	unsigned int experience;
 public:
@@ -209,19 +230,26 @@ public:
 	std::ofstream& print(ofstream& ofs)const override
 	{
 		Human::print(ofs) << " ";
-		ofs.width(25);
+		ofs.width(SPECIALTY_LENGTH);
 		ofs << std::left;
 		ofs << specialty;
-		ofs.width(5);
+		ofs.width(EXPERIENCE_LENGTH);
 		ofs << std::right;
 		ofs << experience;
 		return ofs;
 	}
 	std::ifstream& scan(std::ifstream& ifs)override
 	{
-		const int SIZE = 25;
+		Human::scan(ifs);
+		const int SIZE = SPECIALTY_LENGTH;
 		char buffer[SIZE]{};
-		ifs.read(buffer, SIZE);
+		ifs.read(buffer, SIZE-1);
+		for (int i = SIZE - 2; buffer[i] == ' '; i--)buffer[i] = 0;
+		while (buffer[0] == ' ')
+		{
+			for (int i = 0; buffer[i]; i++)buffer[i] = buffer[i + 1];
+		}
+		specialty = buffer;
 		ifs >> experience;
 		return ifs;
 	}
@@ -267,10 +295,19 @@ public:
 	}
 	std::ifstream& scan(std::ifstream& ifs)override
 	{
-		std::getline(ifs, topuic);
+		Student::scan(ifs);
+		std::getline(ifs, topic);
 		return ifs;
 	}
 };
+
+Human* HumanFactory(const std::string& type)
+{
+	// Этот метод создает объекты в динамической памяти:
+	if (type.find("Student") != std::string::npos)return new Student("", "", 0, "", "", 0, 0);
+	if (type.find("Undergrad") != std::string::npos)return new Undergrad("", "", 0, "", "", 0, 0,"");
+	if (type.find("Teacher") != std::string::npos)return new Teacher("", "", 0, "", 0);
+}
 
 void print(Human* group[], const int n)
 {
@@ -320,7 +357,17 @@ Human** load(const std::string& filename,int& n)
 	//cout << fin.tellg() << endl;
 
 	//4) Загружаем объекты из файла
-
+	if (fin.is_open())
+	{
+		std::string type;
+		for (int i = 0; i < n; i++)
+		{
+			std::getline(fin, type, ':');
+			//cout << buffer << endl;
+			group[i] = HumanFactory(type);
+			fin >> *group[i];
+		}
+	}
 
 	return group;
 }
