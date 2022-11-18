@@ -40,7 +40,7 @@ void main()
 		std::cerr << "Error: file not found" << endl;
 	}
 #endif // READ_TO_FILE
-	std::ifstream fin("201 RAW.txt"); 
+	std::ifstream fin("201 RAW.txt");
 	const int size = 256;
 	char buffer[size] = {};
 	std::ofstream fout("201 newRAW.txt");
@@ -48,7 +48,6 @@ void main()
 		{
 		    fout << buffer << endl;
 		}
-	fin.close();
-	fout.close();
+	
 	system("notepad 201 newRAW.txt");
 }
