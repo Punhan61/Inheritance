@@ -45,7 +45,8 @@ void main()
 	char number[10] = {};
 	char src_filename[_MAX_FNAME] = {};//_MAX_FNAME - это встроеная константа.которая
 	//содержит максимально возможную длинну файла
-	char dst_filename[_MAX_FNAME] = {};
+	char wal_filename[_MAX_FNAME] = {};
+	char dhcpd_filename[_MAX_FNAME] = {};
 	// src(source) - файл источник,из кторого изначально берутся MAC и IP адреса
 	// dst(destination) - это конечеый файл, в котором столбики будут поменяны местами
 
@@ -53,22 +54,29 @@ void main()
 	// По введенному номеру аудитории формируем имена файлов,как исходного,так и конечного:
 
 	strcat(src_filename, number);
-	strcat(src_filename, " RAW.txt"); 
-	// strcat(dst,src); // содержимое строки src добавляет в конец 
+	strcat(src_filename, " RAW.txt");
+	// strcat(dst,src); // содержимое строки src добавляет в конец dst
 	// strcat - выполняет коткатенацию строку
 	//к первой строке (filename) добавляет вторую строку (" RAW.txt");	
-	strcat(dst_filename, number);
-	strcat(dst_filename, " 201 newRAW.txt");
-	
+	strcat(wal_filename, number);
+	strcat(wal_filename, " ready.txt");
+
+	strcat(dhcpd_filename, number);
+	strcat(dhcpd_filename, ".dhcpd");
+
+	cout << "Source filename:" << src_filename << endl;
+	cout << "WAL filename:" << wal_filename << endl;
+	cout << "DHCPD filename:" << dhcpd_filename << endl;
+
 	const int IP_SIZE = 16;
 	const int MAC_SIZE = 18;
 
 	char sz_ip_buffer[IP_SIZE] = {};
 	char sz_mac_buffer[MAC_SIZE] = {};
 
-	std::ofstream fout(dst_filename);
+	std::ofstream fout(wal_filename);
 	std::ifstream fin(src_filename);
-	
+
 	if (fin.is_open())
 	{
 		while (!fin.eof())
@@ -78,7 +86,7 @@ void main()
 			cout << sz_mac_buffer << "\t\t" << sz_ip_buffer << endl;
 			fout << sz_mac_buffer << "\t\t" << sz_ip_buffer << endl;
 		}
-		fin.close();
+		//fin.close();  //Будем еще раз читать файл,только позже
 	}
 	else
 	{
@@ -86,8 +94,49 @@ void main()
 	}
 
 	fout.close();
-	char sz_command[_MAX_FNAME] = "notepad ";
-	strcat(sz_command, dst_filename);
+	char sz_command[_MAX_FNAME] = "start notepad ";
+	strcat(sz_command, wal_filename);
 	system(sz_command);
 
+	/////////////////////////////////////////////////////////////////////////////////
+
+	// Возвращаемся в начало файла
+	fin.clear();
+	fin.seekg(0);
+	cout << fin.tellg() << endl;
+	fout.open(dhcpd_filename);
+	if (fin.is_open())
+	{
+		for (int i = 1; !fin.eof(); i++)
+		{
+			fin >> sz_ip_buffer >> sz_mac_buffer;
+			if (sz_ip_buffer[0] == 0 || sz_mac_buffer[0] == 0)continue;
+			for (int i = 0; sz_mac_buffer[i]; i++)
+			{
+				if (sz_mac_buffer[i] == '-')sz_mac_buffer[i] = '-';
+			}
+			cout << "host " << number << "-" << i << endl;
+			cout << "{\n";
+			cout << "\thardware ethernet\t" << sz_mac_buffer << ";\n";
+			cout << "\tfixsed-address\t\t" << sz_ip_buffer << ";\n";
+			cout << "}\n"; cout << number << "-" << i << endl;
+			cout << endl;
+
+			fout << "host " << number << "-" << i << endl;
+			fout << "{\n";
+			fout << "\thardware ethernet\t" << sz_mac_buffer << ";\n";
+			fout << "\tfixsed-address\t\t" << sz_ip_buffer << ";\n";
+			fout << "}\n";
+		}
+		fin.close();
+	}
+	else
+	{
+		std::cerr << "Error: file not found" << endl;
+	}
+
+	strcpy(sz_command + strlen("start notepad "), dhcpd_filename);
+	system(sz_command);
+	// strcpy(dst,src);  //string copy
+	// strcpy() копирует строку src в строку dst
 }

@@ -1,0 +1,60 @@
+host 301-1
+{
+	hardware ethernet	00-19-99-b4-c2-ae;
+	fixsed-address		192.168.100.21;
+}
+host 301-2
+{
+	hardware ethernet	00-19-99-ae-a8-8e;
+	fixsed-address		192.168.100.22;
+}
+host 301-3
+{
+	hardware ethernet	00-19-99-b5-e9-9b;
+	fixsed-address		192.168.100.23;
+}
+host 301-4
+{
+	hardware ethernet	00-19-99-b4-a2-ed;
+	fixsed-address		192.168.100.24;
+}
+host 301-5
+{
+	hardware ethernet	00-19-99-ad-4f-51;
+	fixsed-address		192.168.100.25;
+}
+host 301-6
+{
+	hardware ethernet	00-19-99-dc-52-80;
+	fixsed-address		192.168.100.26;
+}
+host 301-7
+{
+	hardware ethernet	00-19-99-b4-a2-fb;
+	fixsed-address		192.168.100.27;
+}
+host 301-8
+{
+	hardware ethernet	00-19-99-b2-b3-e6;
+	fixsed-address		192.168.100.28;
+}
+host 301-9
+{
+	hardware ethernet	00-19-99-ae-a5-59;
+	fixsed-address		192.168.100.29;
+}
+host 301-10
+{
+	hardware ethernet	00-19-99-dc-52-77;
+	fixsed-address		192.168.100.30;
+}
+host 301-11
+{
+	hardware ethernet	00-19-99-ac-b8-11;
+	fixsed-address		192.168.100.31;
+}
+host 301-12
+{
+	hardware ethernet	00-19-99-b5-e9-4d;
+	fixsed-address		192.168.100.32;
+}
