@@ -1,21 +1,21 @@
-#include<iostream>
+Ôªø#include<iostream>
 #include<windows.h>
 using namespace std;
 
 namespace Geometry
 {
-	enum Color
+	enum Color     // Enumeration (–ü–µ—Ä–µ—á–µ—Å–ª–µ–Ω–∏–µ) - —ç—Ç–æ –Ω–∞–±–æ—Ä —Ü–µ–ª–æ—á–∏—Å–ª–µ–Ω–Ω—ã—Ö –∫–æ–Ω—Å—Ç–∞–Ω—Ç
 	{
 		console_default = 0x07,
 		console_blue = 0x99,
 		console_green = 0xAA,
 		console_red = 0xCC,
-		console_yellow = 0xEE,
+		console_yellow = 0xEE
 	};
 
 	class Shape
 	{
-	protected:
+	protected:  // –¥–æ—Å—Ç—É–ø –¥–ª—è –¥–æ—á–µ—Ä–Ω–µ–≥–æ –∫–ª–∞—Å—Å–∞ ( –∏—Å–ø–æ–ª—å–∑—É–µ—Ç—Å—è —Ç–æ–ª—å–∫–æ –ø—Ä–∏ –Ω–∞—Å–ª–µ–¥–æ–≤–∞–Ω–∏–∏ )
 		Color color;
 	public:
 		Shape(Color color) :color(color) {}
@@ -25,15 +25,14 @@ namespace Geometry
 		virtual void draw()const = 0;
 		virtual void info()const
 		{
-			cout << "œÎÓ˘‡‰¸ ÙË„Û˚: " << area() << endl;
-			cout << "œÂËÏÂÚ ÙË„Û˚: " << perimeter() << endl;
+			cout << "–ü–ª–æ—â–∞–¥—å —Ñ–∏–≥—É—Ä—ã: " << area() << endl;
+			cout << "–ü–µ—Ä–∏–º–µ—Ç—Ä —Ñ–∏–≥—É—Ä—ã: " << perimeter() << endl;
 			draw();
 		}
 	};
 
 	class Square :public Shape
 	{
-
 		double side;
 	public:
 		double get_side()const
@@ -46,7 +45,7 @@ namespace Geometry
 			if (side > 20)side = 20;
 			this->side = side;
 		}
-		// Constructor
+		// Constructors
 		Square(double side, Color color) :Shape(color)
 		{
 			set_side(side);
@@ -62,9 +61,8 @@ namespace Geometry
 		}
 		void draw()const override
 		{
-			HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-			SetConsoleTextAttribute(hConsole, color);
-
+			HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE); // –ø–æ–ª—É—á–∞–µ–º –æ–∫–Ω–æ –∫–æ–Ω—Å–æ–ª–∏
+			SetConsoleTextAttribute(hConsole, color);  // –¥–ª—è –∫–æ–Ω—Å–æ–ª–∏ –∑–∞–¥–∞–µ–º –∞—Ç—Ä–∏–±—É—Ç —Ü–≤–µ—Ç–∞
 			for (int i = 0; i < side; i++)
 			{
 				for (int j = 0; j < side; j++)
@@ -73,15 +71,16 @@ namespace Geometry
 				}
 				cout << endl;
 			}
-			SetConsoleTextAttribute(hConsole, Color::console_default);
+			SetConsoleTextAttribute(hConsole, Color::console_default); // –í–æ–∑–≤—Ä–∞—â–∞–µ–º —Ü–≤–µ—Ç –æ–±—Ä–∞—Ç–Ω–æ –ø–æ—Å–ª–µ —Ç–æ–≥–æ –∫–∞–∫ –≤—ã–≤–µ–ª–∏ –∫–≤–∞–¥—Ä–∞—Ç
 		}
 		void info()const override
 		{
 			cout << typeid(*this).name() << endl;
-			cout << "ƒÎËÌ‡ ÒÚÓÓÌ˚ Í‚‡‰‡Ú‡: " << side << endl;
+			cout << "–î–ª–∏–Ω–Ω–∞ —Å—Ç–æ—Ä–æ–Ω—ã –∫–≤–∞–¥—Ä–∞—Ç–∞: " << side << endl;
 			Shape::info();
 		}
 	};
+
 	class Rectangle :public Shape
 	{
 		double width;
@@ -119,7 +118,7 @@ namespace Geometry
 		}
 		double perimeter()const override
 		{
-			return(width + length) * 2;
+			return (width + length) * 2;
 		}
 		void draw()const
 		{
@@ -135,32 +134,36 @@ namespace Geometry
 			}
 			SetConsoleTextAttribute(hConsole, Color::console_default);*/
 
-			//1) œÓÎÛ˜‡ÂÏ ÓÍÌÓ ÍÓÌÒÓÎË
+			// 1) –ü–æ–ª—É—á–∞–µ–º –æ–∫–Ω–æ –∫–æ–Ω—Å–æ–ª–∏
 			HWND hwnd = GetConsoleWindow();
-			//2) ÔÓÎÛ˜‡ÂÏ ÍÓÌÚÂÍÒÚ ÛÒÚÓÈÒÚ‚‡ ‰Îˇ ÓÍÌ‡ ÍÓÌÒÓÎË
-			HDC hdc = GetDC(hwnd); // ›ÚÓ ÚÓ,Ì‡ ˜ÂÏ ·Û‰ÂÏ ËÒÓ‚‡Ú¸
 
-			//3) ÒÓÁ‰‡ÂÏ Í‡‡Ì‰‡¯ - ˝ÚÓ ÚÓ, ˜ÂÏ Ï˚ ·Û‰ÂÏ ËÒÓ‚‡Ú¸(Í‡‡Ì‰‡¯ ËÒÛÂÚ ÎËÌËË)
+			// 2) –ü–æ–ª—É—á–∞–µ–º –∫–æ–Ω—Ç–µ–∫—Å—Ç —É—Å—Ç—Ä–æ–π—Å—Ç–≤–∞ –¥–ª—è –æ–∫–Ω–∞ –∫–æ–Ω—Å–æ–ª–∏
+			HDC hdc = GetDC(hwnd);// —ç—Ç–æ —Ç–æ –Ω–∞ —á–µ–º –º—ã –±—É–¥–µ–º —Ä–∏—Å–æ–≤–∞—Ç—å
+
+			// 3) —Å–æ–∑–¥–∞–µ–º –∫–∞—Ä–∞–Ω–¥–∞—à - —ç—Ç–æ —Ç–æ —á–µ–º –º—ã –±—É–¥–µ–º —Ä–∏—Å–æ–≤–∞—Ç—å (–∫–∞—Ä–∞–Ω–¥–∞—à —Ä–∏—Å—É–µ—Ç –ª–∏–Ω–∏–∏)
 			HPEN hPen = CreatePen(PS_SOLID, 5, color);
-			//4) —ÓÁ‰‡ÂÏ ÍËÒÚ¸. ËÒÚ¸ ËÒÛÂÚ Á‡ÎË‚ÍÛ ‚ Á‡ÏÍÌÛÚÓÈ ÙË„ÛÂ
+
+			// 4) –°–æ–∑–¥–∞–µ–º –∫–∏—Å—Ç—å. –ö–∏—Å—Ç—å —Ä–∏—Å—É–µ—Ç –∑–∞–ª–∏–≤–∫—É –≤ –∑–∞–º–∫–Ω—É—Ç–æ–π —Ñ–∏–≥—É—Ä–µ
 			HBRUSH hbrush = CreateSolidBrush(color);
-			//5) ¬˚·Ë‡ÂÏ ˜ÂÏ Ë Ì‡ ˜ÂÏ Ï˚ ·Û‰ÂÏ ËÒÓ‚‡Ú¸
+
+			// 5) –í—ã–±–∏—Ä–∞–µ–º —á–µ–º –∏ –Ω–∞ —á–µ–º –±—É–¥–µ–º —Ä–∏—Å–æ–≤–∞—Ç—å
 			SelectObject(hdc, hPen);
 			SelectObject(hdc, hbrush);
 
-			//6) –ËÒÛÂÏ ÔˇÏÓÛ„ÓÎ¸ÌËÍ
+			// 6) –†–∏—Å—É–µ–º –ø—Ä—è–º–æ—É–≥–æ–ª—å–Ω–∏–∫
 			::Rectangle(hdc, 100, 100, 500, 300);
 
-			// ”‰‡ÎˇÂÏ Í‡‡Ì‰‡¯
+			// –£–¥–∞–ª—è–µ–º –∫–∞—Ä–∞–Ω–¥–∞—à
 			DeleteObject(hPen);
-			
+
+			// –û—Å–≤–æ–±–æ–∂–¥–∞–µ–º –∫–æ–Ω—Ç–µ–∫—Å—Ç —É—Å—Ç—Ä–æ–π—Å—Ç–≤–∞ 
 			ReleaseDC(hwnd, hdc);
 		}
 		void info()const override
 		{
 			cout << typeid(*this).name() << endl;
-			cout << "ÿËËÌ‡: " << width << endl;
-			cout << "ƒÎËÌ‡: " << length << endl;
+			cout << "–®–∏—Ä–∏–Ω–∞: " << width << endl;
+			cout << "–î–ª–∏–Ω–∞: " << length << endl;
 			Shape::info();
 		}
 	};
@@ -169,11 +172,9 @@ namespace Geometry
 void main()
 {
 	setlocale(LC_ALL, "");
-	//Shape shape;
-	Geometry::Square square(8,Geometry::Color::console_red);
+	Geometry::Square square(8, Geometry::Color::console_red);
 	square.info();
 
-	Geometry::Rectangle rect(15, 7,Geometry::Color::console_yellow);
+	Geometry::Rectangle rect(15, 7, Geometry::Color::console_yellow);
 	rect.info();
-
 }
