@@ -1,11 +1,15 @@
 ﻿#define _USE_MATH_DEFINES
 #include<iostream>
-#include<windows.h>
+#include<ctime>
+#include<Windows.h>
 using namespace std;
+
+#define RAND rand()%500
+#define COLOR RGB(rand(), rand(), rand())
 
 namespace Geometry
 {
-	enum Color     // Enumeration (Перечесление) - это набор целочисленных констант
+	enum Color
 	{
 		red = 0x000000FF,
 		green = 0x0000FF00,
@@ -18,20 +22,29 @@ namespace Geometry
 		console_blue = 0x99,
 		console_green = 0xAA,
 		console_red = 0xCC,
-		console_yellow = 0xEE
+		console_yellow = 0xEE,
 	};
 
 	class Shape
 	{
-	protected:  // доступ для дочернего класса ( используется только при наследовании )
+	protected:
 		unsigned int start_x;
 		unsigned int start_y;
 		unsigned int line_width;
 		Color color;
 	public:
-		unsigned int get_start_x()const { return start_x; }
-		unsigned int get_start_y()const { return start_y; }
-		unsigned int get_line_width()const { return line_width; }
+		unsigned int get_start_x()const
+		{
+			return start_x;
+		}
+		unsigned int get_start_y()const
+		{
+			return start_y;
+		}
+		unsigned int get_line_width()const
+		{
+			return line_width;
+		}
 		void set_start_x(unsigned int start_x)
 		{
 			if (start_x > 800)start_x = 800;
@@ -47,8 +60,7 @@ namespace Geometry
 			if (line_width > 30)line_width = 30;
 			this->line_width = line_width;
 		}
-
-		Shape(unsigned int start_x,unsigned int start_y,unsigned int line_width, Color color) :color(color) 
+		Shape(unsigned int start_x, unsigned int start_y, unsigned int line_width, Color color) :color(color)
 		{
 			set_start_x(start_x);
 			set_start_y(start_y);
@@ -61,7 +73,7 @@ namespace Geometry
 		virtual void info()const
 		{
 			cout << "Площадь фигуры: " << get_area() << endl;
-			cout << "Периметр фигуры: " << get_perimeter() << endl;
+			cout << "Периметр фигуры:" << get_perimeter() << endl;
 			draw();
 		}
 	};
@@ -80,9 +92,9 @@ namespace Geometry
 			if (side > 20)side = 20;
 			this->side = side;
 		}
-		// Constructors
-		Square(double side,unsigned int start_x,unsigned int start_y,unsigned int line_width, Color color) :
-			Shape(start_x,start_y,line_width, color)
+		//				Constructors:
+		Square(double side, unsigned int start_x, unsigned int start_y, unsigned int line_width, Color color) :
+			Shape(start_x, start_y, line_width, color)
 		{
 			set_side(side);
 		}
@@ -97,8 +109,8 @@ namespace Geometry
 		}
 		void draw()const override
 		{
-			HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE); // получаем окно консоли
-			SetConsoleTextAttribute(hConsole, color);  // для консоли задаем атрибут цвета
+			HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+			SetConsoleTextAttribute(hConsole, color);
 			for (int i = 0; i < side; i++)
 			{
 				for (int j = 0; j < side; j++)
@@ -107,22 +119,21 @@ namespace Geometry
 				}
 				cout << endl;
 			}
-			SetConsoleTextAttribute(hConsole, Color::console_default); // Возвращаем цвет обратно после того как вывели квадрат
+			SetConsoleTextAttribute(hConsole, Color::console_default);
 		}
 		void info()const override
 		{
 			cout << typeid(*this).name() << endl;
-			cout << "Длинна стороны квадрата: " << side << endl;
+			cout << "Длина стороны квадрата: " << side << endl;
 			Shape::info();
 		}
 	};
-
 	class Rectangle :public Shape
 	{
 		double width;
 		double length;
 	public:
-		double get_widht()const
+		double get_width()const
 		{
 			return width;
 		}
@@ -139,11 +150,11 @@ namespace Geometry
 		void set_length(double length)
 		{
 			if (length < 20)length = 20;
-			if (length > 200)length = 200;
+			if (length > 200) length = 200;
 			this->length = length;
 		}
-		Rectangle(double width, double length, unsigned int start_x, unsigned int start_y,unsigned int line_width, Color color) :
-			Shape(start_x,start_y,line_width, color)
+		Rectangle(double width, double length, unsigned int start_x, unsigned int start_y, unsigned int line_width, Color color)
+			:Shape(start_x, start_y, line_width, color)
 		{
 			set_width(width);
 			set_length(length);
@@ -171,37 +182,34 @@ namespace Geometry
 			}
 			SetConsoleTextAttribute(hConsole, Color::console_default);*/
 
-			// 1) Получаем окно консоли
+			//1) Получаем окно консоли:
 			HWND hwnd = GetConsoleWindow();
+			//2) Получаем контекст устройства для окна консоли:
+			HDC hdc = GetDC(hwnd);	//это то, на чем мы будем рисовать
 
-			// 2) Получаем контекст устройства для окна консоли
-			HDC hdc = GetDC(hwnd);// это то на чем мы будем рисовать
-
-			// 3) создаем карандаш - это то чем мы будем рисовать (карандаш рисует линии)
+			//3) Создаем карандаш - это то, чем мы будем рисорвать (карандаш рисует линии):
 			HPEN hPen = CreatePen(PS_SOLID, line_width, color);
-
-			// 4) Создаем кисть. Кисть рисует заливку в замкнутой фигуре
-			HBRUSH hbrush = CreateSolidBrush(color);
-
-			// 5) Выбираем чем и на чем будем рисовать
+			//4) Создаем кисть. Кисть рисует заливку в замкнутой фигуре
+			HBRUSH hBrush = CreateSolidBrush(color);
+			//5) Выбираем чем, и на чем мы будем рисорвать:
 			SelectObject(hdc, hPen);
-			SelectObject(hdc, hbrush);
+			SelectObject(hdc, hBrush);
 
-			// 6) Рисуем прямоугольник
-			::Rectangle(hdc, start_x, start_y, start_x+width, start_y+length);
+			//6) Рисуем прямоугольник:
+			::Rectangle(hdc, start_x, start_y, start_x + width, start_y + length);
 
-			// Удаляем карандаш
+			//Удаляем карандаш:
 			DeleteObject(hPen);
-			DeleteObject(hbrush); 
+			DeleteObject(hBrush);
 
-			// Освобождаем контекст устройства 
+			//Освобождаем контекст устройства:
 			ReleaseDC(hwnd, hdc);
 		}
 		void info()const override
 		{
 			cout << typeid(*this).name() << endl;
 			cout << "Ширина: " << width << endl;
-			cout << "Длина: " << length << endl;
+			cout << "Длина:  " << length << endl;
 			Shape::info();
 		}
 	};
@@ -219,8 +227,8 @@ namespace Geometry
 			if (radius > 220)radius = 220;
 			this->radius = radius;
 		}
-		Circle(double radius, unsigned int start_x, unsigned int start_y,unsigned int line_width, Color color) :
-			Shape(start_x,start_y,line_width, color)
+		Circle(double radius, unsigned int start_x, unsigned int start_y, unsigned int line_width, Color color)
+			:Shape(start_x, start_y, line_width, color)
 		{
 			set_radius(radius);
 		}
@@ -238,15 +246,15 @@ namespace Geometry
 			HWND hwnd = GetConsoleWindow();
 			HDC hdc = GetDC(hwnd);
 			HPEN hPen = CreatePen(PS_SOLID, line_width, color);
-			HBRUSH hbrush = CreateSolidBrush(color);
+			HBRUSH hBrush = CreateSolidBrush(color);
 			SelectObject(hdc, hPen);
-			SelectObject(hdc, hbrush);
+			SelectObject(hdc, hBrush);
 
 			::Ellipse(hdc, start_x, start_y, start_x + radius * 2, start_y + radius * 2);
 
-			DeleteObject(hbrush);
+			DeleteObject(hBrush);
 			DeleteObject(hPen);
-			ReleaseDC(hwnd,hdc);
+			ReleaseDC(hwnd, hdc);
 		}
 		void info()const
 		{
@@ -259,7 +267,7 @@ namespace Geometry
 	{
 	public:
 		Triangle(unsigned int start_x, unsigned int start_y, unsigned int line_width, Color color)
-			:Shape(start_x,start_y,line_width,color) {}
+			:Shape(start_x, start_y, line_width, color) {}
 		virtual double get_height()const = 0;
 		void info()const
 		{
@@ -273,7 +281,7 @@ namespace Geometry
 	public:
 		double get_side()const
 		{
-			return side; 
+			return side;
 		}
 		void set_side(double side)
 		{
@@ -304,19 +312,19 @@ namespace Geometry
 			HWND hwnd = GetConsoleWindow();
 			HDC hdc = GetDC(hwnd);
 			HPEN hPen = CreatePen(PS_SOLID, line_width, color);
-			HBRUSH hbrush = CreateSolidBrush(color);
+			HBRUSH hBrush = CreateSolidBrush(color);
 			SelectObject(hdc, hPen);
-			SelectObject(hdc, hbrush);
+			SelectObject(hdc, hBrush);
 
 			POINT vert[] =
 			{
-				{start_x,start_y + side},
-				{start_x + side,start_y + side},
-				{start_x + side / 2,start_y + side - get_height()}
-			}; 
+				{start_x, start_y + side},
+				{start_x + side, start_y + side},
+				{start_x + side / 2, start_y + side - get_height()}
+			};
 			::Polygon(hdc, vert, 3);
 
-			DeleteObject(hbrush);
+			DeleteObject(hBrush);
 			DeleteObject(hPen);
 			ReleaseDC(hwnd, hdc);
 		}
@@ -324,23 +332,58 @@ namespace Geometry
 		{
 			cout << typeid(*this).name() << endl;
 			cout << "Side:\t" << side << endl;
-			Shape::info();
+			Triangle::info();
 		}
 	};
+
+	Shape* Factory(int type)
+	{
+		switch (type)
+		{
+			//case 1: return new Square(rand(), rand(), rand(), rand(), (Color)rand()); break;
+		case 0: return new Circle(RAND, rand() % 500, rand() % 500, RAND, (Color)COLOR);				break;
+		case 1: return new Rectangle(RAND, RAND, rand() % 500, rand() % 500, RAND, (Color)COLOR);	break;
+		case 2: return new EquilateralTriangle(RAND, rand() % 500, rand() % 500, RAND, (Color)COLOR); break;
+		}
+	}
 }
 
 void main()
 {
 	setlocale(LC_ALL, "");
-	Geometry::Square square(8, 100, 100,11, Geometry::Color::console_red);
+
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD coord;
+	SetConsoleDisplayMode(hConsole, CONSOLE_FULLSCREEN_MODE, &coord);
+
+	//Shape shape;
+	/*Geometry::Square square(8, 100, 100, 11, Geometry::Color::console_red);
 	square.info();
-
-	Geometry::Rectangle rect(150, 70, 300, 100,11, Geometry::Color::grey);
+	Geometry::Rectangle rect(150, 70, 300, 100, 11, Geometry::Color::grey);
 	rect.info();
-
-	Geometry::Circle circle(100, 500, 100,11, Geometry::Color::yellow);
+	Geometry::Circle circle(100, 500, 100, 11, Geometry::Color::yellow);
 	circle.info();
+	Geometry::EquilateralTriangle e_try(170, 350, 200, 8, Geometry::Color::green);
+	e_try.info();*/
 
-	Geometry::EquilateralTriangle e_try(120, 350, 200,8, Geometry::Color::green);
-	e_try.info();
+	srand(time(NULL));	//задает начальную точку для генерации случайных чисел.
+						//В качестве точки отсчет берется текущее время.
+
+	const int n = 10;
+	Geometry::Shape* shape[n];
+	for (int i = 0; i < n; i++)
+	{
+		shape[i] = Geometry::Factory(rand() % 3);
+	}
+
+	for (int i = 0; i < n; i++)
+	{
+		shape[i]->draw();
+		Sleep(100);
+	}
+
+	for (int i = 0; i < n; i++)
+	{
+		delete shape[i];
+	}
 }
